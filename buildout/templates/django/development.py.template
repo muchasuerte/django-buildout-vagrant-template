@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+from ${django:project}.settings import *
+import os
+
+DEBUG=True
+TEMPLATE_DEBUG=DEBUG
+
+#MIDDLEWARE_CLASSES += (
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#)
+
+INTERNAL_IPS = ('127.0.0.1','192.168.82.24')
+
+INSTALLED_APPS += (
+    # add here development plugin
+    # 'debug_toolbar',
+)
+
+#DEBUG_TOOLBAR_PANELS = (
+    ##'debug_toolbar.panels.version.VersionPanel',
+    #'debug_toolbar.panels.timer.TimerPanel',
+    #'debug_toolbar.panels.settings_vars.SettingsVarsPanel',
+    #'debug_toolbar.panels.headers.HeaderPanel',
+    #'debug_toolbar.panels.request_vars.RequestVarsPanel',
+    #'debug_toolbar.panels.template.TemplatePanel',
+    #'debug_toolbar.panels.sql.SQLPanel',
+    #'debug_toolbar.panels.signals.SignalPanel',
+    #'debug_toolbar.panels.logger.LoggingPanel',
+#)
+
+#DEBUG_TOOLBAR_CONFIG = {
+#    'INTERCEPT_REDIRECTS': False,
+#    'ENABLE_STACKTRACES' : True,
+#    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+#    'EXTRA_SIGNALS': ['myproject.signals.MySignal'],
+#    'HIDE_DJANGO_SQL': False,
+#    'TAG': 'div',
+#}
+
+
+

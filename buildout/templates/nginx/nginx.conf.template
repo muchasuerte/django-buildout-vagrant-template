@@ -1,0 +1,103 @@
+# kate: syntax Apache Configuration;
+
+daemon off;
+#user  nobody;
+worker_processes  3;
+
+error_log  logs/nginx_error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+pid        run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+    accept_mutex off;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    server_tokens off;
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  logs/nginx_access.log main;
+	# path for static files
+	root ${buildout:directory}/${django:project}/media;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    gzip  on;
+
+    upstream app_server {
+        server unix:${gunicorn:socket-path} fail_timeout=0;
+    }
+
+    server {
+        listen       ${nginx-conf:port};
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        # path for static files
+        root ${buildout:directory}/${django:project}/media;
+
+        location / {
+            client_max_body_size 400M;
+            client_body_postpone_sending 64k;
+            proxy_connect_timeout 300s;
+            proxy_read_timeout 300s;
+            proxy_request_buffering off;
+            proxy_buffering off;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header Host $http_host;
+            proxy_redirect off;
+            proxy_pass http://app_server;
+        }
+
+    }
+
+    # HTTPS server
+    #
+#     server {
+#         listen       ${nginx-conf:sslport};
+#         server_name  localhost;
+# 
+#         ssl                  on;
+#         ssl_certificate      ${buildout:directory}/ssl_cert/cert.crt;
+#         ssl_certificate_key  ${buildout:directory}/ssl_cert/cert.key;
+# 
+#         ssl_session_timeout  5m;
+# 
+#         ssl_protocols  SSLv2 SSLv3 TLSv1;
+#         ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+#         ssl_prefer_server_ciphers   on;
+# 
+#         # path for static files
+#         root ${buildout:directory}/${django:project}/media;
+# 
+#         location / {
+#             client_max_body_size 400M;
+#             client_body_postpone_sending 64k;
+#             proxy_connect_timeout 300s;
+#             proxy_read_timeout 300s;
+#             proxy_request_buffering off;
+#             proxy_buffering off;
+#             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#             proxy_set_header X-Real-IP $remote_addr;
+#             proxy_set_header Host $http_host;
+#             proxy_redirect off;
+#             proxy_pass http://app_server;
+#         }
+#     }
+
+}
