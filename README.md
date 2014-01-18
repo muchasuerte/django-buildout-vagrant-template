@@ -11,8 +11,14 @@
 
 		vagrant plugin install vagrant-vbguest  
 
-- get a copy of that project [download](archive/master.zip)  
-- customize the buildout files into the buildout dir
+- get a copy of that project [download](https://github.com/muchasuerte/django-buildout-vagrant-template/archive/master.zip)  
+- customize the buildout files into the buildout dir:
+
+		buildout/buildout.cfg
+		buildout/development.cfg  (development setting default)
+		buildout/production.cfg   
+		buildout/versions.cfg
+
 - run  
 
 		vagrant up  
